@@ -10,7 +10,8 @@ let
     attrPath = lib.splitString "." name;
     pkg = lib.attrByPath attrPath null pkgs;
     maybePath = builtins.tryEval "${pkg}";
-    markedBroken = lib.attrByPath [ "meta" "broken" ] false pkg;
+    markedBroken = lib.attrByPath [ "meta" "broken" ] false pkg
+                   || lib.attrByPath [ "broken" ] false pkg;
   in rec {
     exists = lib.hasAttrByPath attrPath pkgs;
     broken = !exists || !maybePath.success || markedBroken;
